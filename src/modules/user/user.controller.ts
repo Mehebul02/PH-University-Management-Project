@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import { userService } from './user.service'
 
-const createStudentIntoDB = async (req: Request, res: Response) => {
+const createStudent = async (req: Request, res: Response,) => {
     try {
         const { password, student: studentData } = req.body
         // const zodParsedData = userValidation.parse(studentData)
@@ -10,9 +10,21 @@ const createStudentIntoDB = async (req: Request, res: Response) => {
             status: true,
             message: 'User Created successfully',
             data: result
-        })
+        });
     } catch (error) {
-        console.log(error);
+        return {
+        status: false,
+        message: 'An error occurred while creating the user',
+        data: null,
+        error: error.message // Optionally include the error message
+    };
 
     }
+}
+
+
+
+
+export const userControllers = {
+    createStudent
 }
