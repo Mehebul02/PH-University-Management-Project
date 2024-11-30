@@ -14,7 +14,7 @@ const catchAsync = (fn: RequestHandler) => {
 
 
 const getSingleStudent = catchAsync(async (req, res, next) => {
-    try {
+    
         const { studentId } = req.params
         const result = await StudentServices.getSingleStudentFromDB(studentId)
 
@@ -24,12 +24,7 @@ const getSingleStudent = catchAsync(async (req, res, next) => {
             message: 'Student is retrieved successfully',
             data: result
 
-        })
-    } catch (error) {
-        next(error)
-    }
-}
-)
+        })})
 
 const getAllStudents: RequestHandler = async (req, res, next) => {
     try {

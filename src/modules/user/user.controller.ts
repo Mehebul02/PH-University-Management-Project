@@ -1,9 +1,16 @@
 import httpStatus from 'http-status';
-import express, {  RequestHandler, } from 'express'
+import express, { Request, NextFunction, RequestHandler, Response, } from 'express'
 import { UserServices } from './user.service'
 import sendResponse from '../../app/utils/sendResponse'
 
-const createStudent:RequestHandler = async (req, res, next) => {
+
+const catchAsync = (fn: RequestHandler) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        Promise.resolve(fn(req, res, next)).catch((error) => next(error))
+    }
+}
+
+const createStudent: RequestHandler = catchAsync(async (req, res, next) => {
     try {
         const { password, student: studentData } = req.body
         // const zodParsedData = userValidation.parse(studentData)
@@ -12,7 +19,7 @@ const createStudent:RequestHandler = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-}
+})
 
 
 
