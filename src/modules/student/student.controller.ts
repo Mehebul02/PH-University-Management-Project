@@ -1,11 +1,13 @@
 
 
+import { NextFunction } from 'express';
 import { StudentServices } from './student.service'
 
 
 const getSingleStudent = async (
     req: Request,
     res: Response,
+    next:NextFunction
 
 ) => {
     try {
@@ -17,18 +19,14 @@ const getSingleStudent = async (
             message: 'Student is retrieved succesfully',
             data: result,
         });
-    } catch (err: any) {
-        res.status(500).json({
-            success: false,
-            message: err.message || 'Student is retrieved succesfully'
-
-        })
+    } catch (error) {
+        next(error)
     }
 }
 
 const getAllStudents = async (
     req: Request,
-    res: Response,) => {
+    res: Response,next:NextFunction) => {
     try {
         const result = await StudentServices.getAllStudentsFromDB()
 
@@ -37,11 +35,8 @@ const getAllStudents = async (
             message: 'Student is retrieved succesfully',
             data: result,
         });
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message || "Something went wrong"
-        })
+    } catch (error) {
+       next(error)
     }
 }
 
