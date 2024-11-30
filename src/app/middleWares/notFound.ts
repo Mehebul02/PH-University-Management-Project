@@ -1,10 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import  httpStatus from 'http-status';
 import { NextFunction, Request, Response } from "express";
+import { error } from 'console';
+
 
 
 const notFound = (req: Request, res: Response, next: NextFunction) => {
-    const statusCode = 500;
-    message: err.message || 'something wend wrong';
-    return res.status(statusCode).json({
+
+    return res.status(httpStatus.Not_Found).json({
+        success: false,
+        message: 'API Not found',
+        error: ""
 
     })
 }
+
+export default notFound
