@@ -1,13 +1,13 @@
 import httpStatus from 'http-status';
-import { Request, Response, NextFunction } from 'express';
+import {RequestHandler } from 'express';
 import { StudentServices } from './student.service'
 import sendResponse from '../../app/utils/sendResponse';
 
 
-const getSingleStudent = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+const getSingleStudent:RequestHandler = async (
+    req,
+    res,
+    next
 
 ) => {
     try {
@@ -26,9 +26,7 @@ const getSingleStudent = async (
     }
 }
 
-const getAllStudents = async (
-    req: Request,
-    res: Response, next: NextFunction) => {
+const getAllStudents:RequestHandler = async (req, res, next) => {
     try {
         const result = await StudentServices.getAllStudentsFromDB()
         sendResponse(res, {
@@ -45,11 +43,7 @@ const getAllStudents = async (
     }
 }
 
-const deleteStudent = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+const deleteStudent:RequestHandler = async (req, res, next) => {
     try {
         const { studentId } = req.params
         const result = await StudentServices.deleteStudentFromDB(studentId)
