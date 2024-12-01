@@ -1,16 +1,7 @@
 import httpStatus from 'http-status';
-import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { StudentServices } from './student.service'
 import sendResponse from '../../app/utils/sendResponse';
 import catchAsync from '../../app/utils/catchAsync';
-
-
-
-// const catchAsync = (fn: RequestHandler) => {
-//     return (req: Request, res: Response, next: NextFunction) => {
-//         Promise.resolve(fn(req, res, next)).catch((error) => next(error))
-//     }
-// }
 
 
 
@@ -40,9 +31,7 @@ const getAllStudents = catchAsync(async (req, res,) => {
 }
 )
 
-const deleteStudent = catchAsync(
-    async (req, res,) => {
-
+const deleteStudent = catchAsync(async (req, res,) => {
         const { studentId } = req.params
         const result = await StudentServices.deleteStudentFromDB(studentId)
 
