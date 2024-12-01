@@ -1,23 +1,11 @@
-import express, { NextFunction, Request, Response, Router } from 'express'
+import express, { Router } from 'express'
 import { userControllers } from './user.controller'
-import { AnyZodObject } from 'zod'
+import { studentValidationSchema } from '../student/student.validation'
+import validateRequest from '../../app/utils/validateRequest'
 
 const router = Router()
 
-const shenaBaheni = (schema: AnyZodObject) => {
 
-    return async (req: Request, res: Response, next: NextFunction) => {
-
-        // validation
-
-        const zodParsedData = await schema.parseAsync({
-            body: req.body
-        })
-        next()
-
-    }
-}
-
-router.use('/create-student', shenaBaheni('shenabahini'), userControllers.createStudent)
+router.use('/create-student', validateRequest(studentValidationSchema), userControllers.createStudent)
 
 export const userRouters = router

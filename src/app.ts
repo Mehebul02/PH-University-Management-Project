@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import globalErrorHandle from './app/middleWares/globalErrorHandling'
-import express, { Application, Request, Response } from 'express'
+import express, { Application, NextFunction, Request, Response } from 'express'
 import cors from 'cors'
 
 import notFound from './app/middleWares/notFound'
@@ -12,7 +12,7 @@ app.use(cors())
 // application route 
 app.use('/api/v1/students', router)
 
-const text =app.get('/', (req: Request, res: Response) => {
+const text =app.get('/', (req: Request, res: Response,next:NextFunction) => {
    const a= 10
    res.send(a)
 })
@@ -21,7 +21,7 @@ app.get('/',text)
 app.use(globalErrorHandle)
 
 
-// not found the api 
+// // not found the api 
 
 app.use(notFound)
 export default app
