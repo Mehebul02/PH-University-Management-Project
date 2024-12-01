@@ -22,4 +22,5 @@ export type TAcademicSemester = {
     code: '1' | '2' | '3'
     year:Date
     startMonth:TMonth
+    endMonth:TMonth
 }
