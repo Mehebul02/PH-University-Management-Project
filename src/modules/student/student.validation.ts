@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const userNameSchema = z.object({
+const userNameValidationSchema = z.object({
     firstName: z
         .string()
         .min(1)
@@ -12,7 +12,7 @@ const userNameSchema = z.object({
     lastName: z.string(),
 })
 
-const guardianSchema = z.object({
+const guardianValidationSchema = z.object({
     fatherName: z.string(),
     fatherOccupation: z.string(),
     fatherContactNo: z.string(),
@@ -21,34 +21,34 @@ const guardianSchema = z.object({
     motherContactNo: z.string(),
 })
 
-const localGuardianSchema = z.object({
+const localGuardianValidationSchema = z.object({
     name: z.string(),
     occupation: z.string(),
     contactNo: z.string(),
     address: z.string(),
 })
 
-export const studentValidationSchema = z.object({
+export const createStudentValidationSchema = z.object({
     body:z.object({
         password: z.string().max(20),
         student:z.object({
-            name: userNameSchema,
+            name: userNameValidationSchema,
         gender: z.enum(['male', 'female', 'other']),
-        dateOfBirth: z.string(),
+        dateOfBirth: z.date().optional(),
         email: z.string().email(),
         contactNo: z.string(),
         emergencyContactNo: z.string(),
         bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
         presentAddress: z.string(),
         permanentAddress: z.string(),
-        guardian: guardianSchema,
-        localGuardian: localGuardianSchema,
+        guardian: guardianValidationSchema,
+        localGuardian: localGuardianValidationSchema,
         profileImg: z.string(),
         })
        
     })
 })
 
-export const studentValidationSchemas={
-    studentValidationSchema,
+export const createStudentValidationSchemas={
+    createStudentValidationSchema
 }
