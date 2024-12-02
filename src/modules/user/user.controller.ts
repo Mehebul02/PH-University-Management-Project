@@ -1,11 +1,11 @@
 import httpStatus from 'http-status';
-import express, { RequestHandler, } from 'express'
+import  { RequestHandler, } from 'express'
 import { UserServices } from './user.service'
 import sendResponse from '../../app/utils/sendResponse'
 import catchAsync from '../../app/utils/catchAsync';
 
 
-const createStudent: RequestHandler = catchAsync(async (req, res, next) => {
+const createStudent: RequestHandler = catchAsync(async (req, res,) => {
 
     const { password, student: studentData } = req.body;
 

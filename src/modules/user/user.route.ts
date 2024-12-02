@@ -1,4 +1,4 @@
-import express, { Router } from 'express'
+import  { Router } from 'express'
 import { userControllers } from './user.controller'
 import { createStudentValidationSchema } from '../student/student.validation'
 import validateRequest from '../../app/utils/validateRequest'

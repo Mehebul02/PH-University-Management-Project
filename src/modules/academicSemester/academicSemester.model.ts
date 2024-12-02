@@ -6,7 +6,7 @@ import { AcademicSemesterCode, AcademicSemesterName, Months } from "./academic.c
 const academicSemesterSchema = new Schema<TAcademicSemester>({
     name: { type: String, required: true, enum: AcademicSemesterName },
     code: { type: String, required: true, enum: AcademicSemesterCode },
-    year: { type: Date, required: true },
+    year: { type: String, required: true },
     startMonth: { type: String, enum: Months },
     endMonth: { type: String, enum: Months }
 },
@@ -14,5 +14,18 @@ const academicSemesterSchema = new Schema<TAcademicSemester>({
         timestamps: true
     }
 )
+
+academicSemesterSchema.pre('save', async function (next) {
+
+    const isSemesterExists = await AcademicSemester.findOne({
+        name: this.name,
+        year: this.year,
+    });
+    if (isSemesterExists) {
+        throw new Error('Semester is al ready exists')
+    }
+    next()
+
+})
 
 export const AcademicSemester = model<TAcademicSemester>('AcademicSemester', academicSemesterSchema)
