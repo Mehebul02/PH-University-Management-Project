@@ -1,11 +1,26 @@
 import { Router } from "express";
 import { AcademicSemesterControllers } from "./academicSemester.controller";
-import validateRequest from "../../app/utils/validateRequest";
 import { AcademicSemesterValidations } from "./academicSemester.validation";
+import validateRequest from "../../app/utils/validateRequest";
 
 
-const route = Router()
+const router = Router()
 
-route.post('/create-academic-semester',validateRequest(AcademicSemesterValidations.createAcademicSemesterValidation),AcademicSemesterControllers.createAcademicSemester)
+router.post('/create-academic-semester',validateRequest(AcademicSemesterValidations.createAcademicSemesterValidation),AcademicSemesterControllers.createAcademicSemester)
 
-export const AcademicSemesterRoute = route
+router.get(
+    '/:semesterId',
+    AcademicSemesterControllers.getSingleAcademicSemester,
+  );
+  
+  router.patch(
+    '/:semesterId',
+    validateRequest(
+      AcademicSemesterValidations.updateAcademicSemesterValidationSchema,
+    ),
+    AcademicSemesterControllers.updateAcademicSemester,
+  );
+  
+  router.get('/', AcademicSemesterControllers.getAllAcademicSemesters);
+
+export const AcademicSemesterRoute = router
