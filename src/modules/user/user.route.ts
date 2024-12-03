@@ -5,6 +5,6 @@ import validateRequest from '../../app/utils/validateRequest'
 
 const router = Router()
 
-router.use('/create-student', validateRequest(createStudentValidationSchema), userControllers.createStudent)
+router.post('/create-student', validateRequest(createStudentValidationSchema), userControllers.createStudent)
 
 export const userRouters = router
