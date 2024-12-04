@@ -14,11 +14,14 @@ app.use('/api/v1/', router)
 
 // app.use('/',text)
 const test = (req: Request, res: Response) => {
-    const a = 10;
-    res.send(a);
-  };
-  
-  app.get('/', test);
+
+  res.send({
+    success: true,
+    message: 'Server is running'
+  })
+};
+
+app.get('/', test);
 
 app.use(globalErrorHandle)
 
