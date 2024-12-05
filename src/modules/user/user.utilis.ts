@@ -28,7 +28,7 @@ export const generatedStudent = async (payload: TAcademicSemester) => {
     const currentYear = payload.year
 
     if (lastStudentId && lastStudentSemesterCode === currentSemesterCode && lastStudentYear === currentYear) {
-        currentId= lastStudentId.substring(6)
+        currentId = lastStudentId.substring(6)
     }
 
     let incrementId = (Number(currentId) + 1).toString().padStart(4, '0')
