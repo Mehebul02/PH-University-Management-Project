@@ -9,7 +9,7 @@ const router = Router()
 
 router.post('/create-academic-faculty', validateRequest(AcademicFacultyValidation.createAcademicFacultySchema), AcademicFacultyControllers.createAcademicFaculty)
 router.get('/:facultyId',AcademicFacultyControllers.getSingleAcademicFaculty)
-router.patch('/:facultyId',validateRequest(AcademicFacultyValidation.updateAcademicFacultySchema),)
+router.patch('/:facultyId',validateRequest(AcademicFacultyValidation.updateAcademicFacultySchema),AcademicFacultyControllers.updateAcademicFaculty)
 router.get('/',AcademicFacultyControllers.getAllAcademicFaculty)
 
 
