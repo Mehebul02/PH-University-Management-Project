@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 import { TAcademicFaculty } from './academicFaculty.interface';
 
 const academicFacultySchema = new Schema<TAcademicFaculty>(
@@ -14,7 +14,6 @@ const academicFacultySchema = new Schema<TAcademicFaculty>(
   },
 );
 
-export const AcademicFaculty = model<TAcademicFaculty>(
-    'AcademicFaculty',
-    academicFacultySchema
-);
+// Check if the model already exists in the `models` object
+export const AcademicFaculty =
+  models.AcademicFaculty || model<TAcademicFaculty>('AcademicFaculty', academicFacultySchema);
