@@ -15,5 +15,4 @@ const academicFacultySchema = new Schema<TAcademicFaculty>(
 );
 
 // Check if the model already exists in the `models` object
-export const AcademicFaculty =
-  models.AcademicFaculty || model<TAcademicFaculty>('AcademicFaculty', academicFacultySchema);
+export const AcademicFaculty =model<TAcademicFaculty>('AcademicFaculty', academicFacultySchema);
