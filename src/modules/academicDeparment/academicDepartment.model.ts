@@ -8,11 +8,11 @@ const academicDepartmentSchema = new Schema<TAcademicDepartment>(
             required: true,
             unique: true,
         },
-        academicFaculty: { type: Schema.Types.ObjectId, ref: "Academicfaculty" }
+        academicFaculty: { type: Schema.Types.ObjectId, ref: "AcademicFaculty" },
     },
     {
         timestamps: true,
-    },
+    }
 );
 
 academicDepartmentSchema.pre('save', async function (next) {
@@ -23,6 +23,16 @@ academicDepartmentSchema.pre('save', async function (next) {
         throw new Error('The department already exist')
     }
     next()
+})
+
+academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
+    const query = this.getQuery()
+    const isDepartmentExist = await AcademicDepartment.findOne(query)
+    if (!isDepartmentExist) {
+        throw new Error('Department dose not exist!')
+    }
+    next()
+
 })
 
 export const AcademicDepartment = model<TAcademicDepartment>(
