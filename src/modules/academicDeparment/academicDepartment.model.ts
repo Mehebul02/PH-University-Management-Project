@@ -1,22 +1,11 @@
+import httpStatus from 'http-status';
 import { model, Schema } from "mongoose";
 import { TAcademicDepartment } from "./academicDepartment.interface";
+import AppError from "../../app/errors/AppError";
 
 
 
-class AppError extends Error {
-    public statusCode:number
-    constructor(statusCode:number, message:string, stack="") {
-        super(message);
-        this.statusCode =statusCode
-        if(stack){
-            this.stack = stack
-        }else{
-            Error.captureStackTrace(this,this.constructor)
-        }
-        
-    }
-    
-}
+
 
 const academicDepartmentSchema = new Schema<TAcademicDepartment>(
     {
@@ -37,7 +26,7 @@ academicDepartmentSchema.pre('save', async function (next) {
         name: this.name
     })
     if (isDepartExist) {
-        throw new AppError(404,'The department already exist')
+        throw new AppError(httpStatus.NOT_FOUND, 'The department already exist')
     }
     next()
 })
@@ -46,7 +35,7 @@ academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
     const query = this.getQuery()
     const isDepartmentExist = await AcademicDepartment.findOne(query)
     if (!isDepartmentExist) {
-        throw new AppError(404,'Department dose not exist!')
+        throw new AppError(httpStatus.NOT_FOUND, 'Department dose not exist!')
     }
     next()
 
