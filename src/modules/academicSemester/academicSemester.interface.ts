@@ -16,7 +16,7 @@ export type TMonth =
 
 
 export type TAcademicSemesterName = 'Autumn' | 'Summer' | 'Fall'
-export type TAcademicSemesterCode = '1' | '2' | '3'
+export type TAcademicSemesterCode = '1' | '2' | '3';
 
 export type TAcademicSemester = {
     name: TAcademicSemesterName

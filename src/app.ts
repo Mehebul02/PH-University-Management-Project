@@ -17,7 +17,7 @@ const test = (req: Request, res: Response) => {
 
   res.send({
     success: true,
-    message: 'Server is running'
+    message: 'Server is running on the ph university management system'
   })
 };
 
