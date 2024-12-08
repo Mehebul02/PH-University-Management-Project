@@ -1,4 +1,5 @@
 
+import mongoose, { mongo } from 'mongoose';
 import config from '../../config';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 // import { AcademicSemester } from '../academicSemester/academicSemester.model';
@@ -24,27 +25,33 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 
 
 
-  // your semester 4 digits number 
-
+  //find academic semester info
   const admissionSemester = await AcademicSemester.findById(payload.admissionSemester)
 
+  const session = await mongoose.startSession()
+  try {
+    session.startTransaction()
+    //set manually generated it
+    userData.id = await generateStudentId(admissionSemester);
+    // userData.id = '423423423';
 
-  //set manually generated it
-  userData.id = generateStudentId(admissionSemester);
-  // userData.id = '423423423';
+    // create a user
+    const newUser = await User.create(userData);
 
-  // create a user
-  const newUser = await User.create(userData);
+    //create a student
+    if (Object.keys(newUser).length) {
+      // set id , _id as user
+      payload.id = newUser.id;
+      payload.user = newUser._id; //reference _id
 
-  //create a student
-  if (Object.keys(newUser).length) {
-    // set id , _id as user
-    payload.id = newUser.id;
-    payload.user = newUser._id; //reference _id
+      const newStudent = await Student.create(payload);
+      return newStudent;
+    }
+  } catch (err) {
 
-    const newStudent = await Student.create(payload);
-    return newStudent;
   }
+
+
 };
 
 export const UserServices = {
