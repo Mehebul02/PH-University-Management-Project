@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import httpStatus  from 'http-status';
 
-import mongoose, { mongo } from 'mongoose';
 import config from '../../config';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 // import { AcademicSemester } from '../academicSemester/academicSemester.model';
@@ -8,6 +9,8 @@ import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 import { generateStudentId } from './user.utilis';
+import AppError from '../../app/errors/AppError';
+import mongoose from 'mongoose';
 
 // import { generatedStudent } from './user.utilis';
 // import { generatedStudent } from './user.utilis';
@@ -35,19 +38,30 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     userData.id = await generateStudentId(admissionSemester);
     // userData.id = '423423423';
 
-    // create a user
-    const newUser = await User.create(userData);
+    // create a user(transaction1)
+    const newUser = await User.create([userData],{session});
 
     //create a student
-    if (Object.keys(newUser).length) {
-      // set id , _id as user
-      payload.id = newUser.id;
-      payload.user = newUser._id; //reference _id
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST,'Field create a user')
 
-      const newStudent = await Student.create(payload);
-      return newStudent;
+      
     }
-  } catch (err) {
+    // set id , _id as user
+    payload.id = newUser[0].id;
+      payload.user = newUser[0]._id; //reference _id
+// create student (transaction2)
+      const newStudent = await Student.create([payload],{session});
+      if(!newStudent){
+        throw new AppError(httpStatus.BAD_REQUEST,'Field to create a student')
+      }
+
+      await session.commitTransaction()
+      await session.endSession()
+      return newStudent;
+  } catch (error) {
+    await session.abortTransaction()
+    await session.endSession()
 
   }
 
