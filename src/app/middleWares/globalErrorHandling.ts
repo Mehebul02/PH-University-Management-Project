@@ -13,10 +13,10 @@ const globalErrorHandle: ErrorRequestHandler = ((error, req, res, next) => {
 
     // eslint-disable-next-line prefer-const
     let statusCode = error.statusCode || 500;
-    const message = error.message || 'Something went wrong'
+    let message = error.message || 'Something went wrong'
 
 
-    const errorSource: TErrorSource = [
+    let errorSource: TErrorSource = [
         {
             path: '',
             message: 'Something wend wrong'
@@ -42,7 +42,10 @@ const globalErrorHandle: ErrorRequestHandler = ((error, req, res, next) => {
 
     if (error instanceof ZodError) {
         const simplifiedError = handleError(error);
-        message: 'Zod Error';
+       statusCode=simplifiedError?.statusCode;
+       message = simplifiedError?.message;
+       errorSource = simplifiedError?.errorSource;
+
 
     }
 
@@ -50,9 +53,9 @@ const globalErrorHandle: ErrorRequestHandler = ((error, req, res, next) => {
 
     res.status(statusCode).json({
         success: false,
-        errorSource,
         message,
-        AmrError: error
+        errorSource,
+       
     })
 })
 
