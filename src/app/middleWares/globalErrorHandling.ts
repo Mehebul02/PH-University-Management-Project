@@ -4,7 +4,10 @@
 
 import { ErrorRequestHandler, } from "express";
 import { ZodError, ZodIssue } from "zod";
-import { TErrorSource } from "../interface/error";
+import { TErrorSources } from "../interface/error";
+import config from "../../config";
+import handleZodError from "../errors/handleZodError";
+import handleValidationError from "../errors/handleValidationError";
 
 
 
@@ -16,46 +19,35 @@ const globalErrorHandle: ErrorRequestHandler = ((error, req, res, next) => {
     let message = error.message || 'Something went wrong'
 
 
-    let errorSource: TErrorSource = [
+    let errorSource: TErrorSources = [
         {
             path: '',
             message: 'Something wend wrong'
         }
     ]
 
-    const handleError = (error: ZodError) => {
 
-        const errorSources: TErrorSource = error.issues.map((issue: ZodIssue) => {
-            return {
-                path: issue?.path[issue.path.length - 1],
-                message: issue.message
-            }
-        })
-
-        const statusCode = 400;
-        return {
-            statusCode,
-            message: "Zod Validation error",
-            errorSource
-        }
-    }
 
     if (error instanceof ZodError) {
-        const simplifiedError = handleError(error);
-       statusCode=simplifiedError?.statusCode;
-       message = simplifiedError?.message;
-       errorSource = simplifiedError?.errorSource;
-
-
+        const simplifiedError = handleZodError(error);
+        statusCode = simplifiedError?.statusCode;
+        message = simplifiedError?.message;
+        errorSource = simplifiedError?.errorSources;
+    } else if (error === 'validationError') {
+        const simplifiedError = handleValidationError(error)
+        statusCode = simplifiedError.statusCode,
+            message = simplifiedError.message,
+            errorSource = simplifiedError.errorSources
     }
 
 
-
+    // Ultimate return 
     res.status(statusCode).json({
         success: false,
         message,
         errorSource,
-       
+        stack: config.NODE_ENV === 'development' ? error?.stack : null
+
     })
 })
 
