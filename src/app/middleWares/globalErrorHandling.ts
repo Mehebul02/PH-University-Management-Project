@@ -38,6 +38,11 @@ const globalErrorHandle: ErrorRequestHandler = ((error, req, res, next) => {
         statusCode = simplifiedError.statusCode,
             message = simplifiedError.message,
             errorSource = simplifiedError.errorSources
+    } else if (error === 'CastError') {
+        const simplifiedError = handleCastError(error)
+        statusCode = simplifiedError.statusCode,
+            message = simplifiedError.message,
+            errorSource = simplifiedError.errorSources
     }
 
 
