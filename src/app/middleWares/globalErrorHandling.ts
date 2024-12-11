@@ -8,6 +8,7 @@ import { TErrorSources } from "../interface/error";
 import config from "../../config";
 import handleZodError from "../errors/handleZodError";
 import handleValidationError from "../errors/handleValidationError";
+import handleCastError from "../errors/handleCastError";
 
 
 
@@ -25,8 +26,6 @@ const globalErrorHandle: ErrorRequestHandler = ((error, req, res, next) => {
             message: 'Something wend wrong'
         }
     ]
-
-
 
     if (error instanceof ZodError) {
         const simplifiedError = handleZodError(error);
