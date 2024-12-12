@@ -11,10 +11,10 @@ const getSingleStudent = catchAsync(async (req, res,) => {
     const result = await StudentServices.getSingleStudentFromDB(studentId,)
 
     sendResponse(res, {
-        statusCode: httpStatus.Ok,
-        success: true,
-        message: 'Student is retrieved successfully',
-        data: result
+        statusCode: httpStatus.OK,
+    success: true,
+    message: 'Student are retrieved succesfully',
+    data: result,
 
     })
 })
@@ -22,10 +22,10 @@ const getSingleStudent = catchAsync(async (req, res,) => {
 const getAllStudents = catchAsync(async (req, res,) => {
     const result = await StudentServices.getAllStudentsFromDB()
     sendResponse(res, {
-        statusCode: httpStatus.Ok,
+        statusCode: httpStatus.OK,
         success: true,
-        message: 'Student is retrieved successfully',
-        data: result
+        message: 'Student are retrieved succesfully',
+        data: result,
 
     })
 }
@@ -39,7 +39,7 @@ const updateStudent = catchAsync(async (req, res,) => {
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Student is updated successfully',
+        message: 'Student are retrieved succesfully',
         data: result,
     })
 
