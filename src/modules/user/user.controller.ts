@@ -1,4 +1,4 @@
-import { httpStatus } from 'http-status';
+import httpStatus  from 'http-status';
 
 
 import { RequestHandler } from "express";
@@ -11,7 +11,9 @@ const createStudent: RequestHandler = catchAsync(async (req, res,) => {
 
     const { password, student: studentData } = req.body;
     // const zodParsedData = studentValidationSchema.parse(studentData);
-
+    console.log("Password:", password);
+    console.log("Student Data:", studentData);
+   
     const result = await UserServices.createStudentIntoDB(
         password,
         studentData,
@@ -21,7 +23,7 @@ const createStudent: RequestHandler = catchAsync(async (req, res,) => {
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Student is created succesfully',
+        message: 'Student is created successfully',
         data: result,
     })
 })

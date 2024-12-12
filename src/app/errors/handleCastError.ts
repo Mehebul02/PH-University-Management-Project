@@ -12,7 +12,7 @@ const handleCastError = (error: mongoose.Error.CastError): TGenericErrorResponse
     const statusCode = 400
     return {
         statusCode,
-        message: 'Validation error',
+        message: 'INVITED ID',
         errorSources
     }
 }
