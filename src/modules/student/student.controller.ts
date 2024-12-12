@@ -12,15 +12,16 @@ const getSingleStudent = catchAsync(async (req, res,) => {
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
-    success: true,
-    message: 'Student are retrieved succesfully',
-    data: result,
+        success: true,
+        message: 'Student are retrieved succesfully',
+        data: result,
 
     })
 })
 
 const getAllStudents = catchAsync(async (req, res,) => {
-    const result = await StudentServices.getAllStudentsFromDB()
+    console.log(req.query);
+    const result = await StudentServices.getAllStudentsFromDB(req.query)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
