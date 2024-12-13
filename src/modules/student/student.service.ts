@@ -9,7 +9,7 @@ import { TStudent } from './student.interface';
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
 
     console.log('base query', query)
-    const queryObj ={...query} //copy the query
+    const queryObj = { ...query } //copy the query
 
 
 
@@ -20,7 +20,7 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     if (query?.search) {
         searchTerm = query.searchTerm as string
     }
-    
+
 
     const searchQuery = Student.find({
         $or: studentSearchableField.map((field) => ({
@@ -29,12 +29,20 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     })
 
     // filtering 
-    const excludeField =["searchTerm"]
-    excludeField.forEach((field)=>delete queryObj[field])
-    
-    const result = await Student.find(query).
+    const excludeField = ["searchTerm", "sort"]
+    excludeField.forEach((field) => delete queryObj[field])
+    // console.log(query,queryObj)
+
+    const filterQuery = searchQuery.find(queryObj).
         populate("admissionSemester").populate({ path: "academicDepartment", populate: { path: "academicFaculty" } })
-    return result
+
+    let sort = '-createdAt'
+    if (query.sort) {
+        sort = query.sort as string
+    }
+
+    const sortQuery = await filterQuery.sort(sort)
+    return sortQuery
 }
 const getSingleStudentFromDB = async (id: string) => {
     const result = await Student.findOne({ id }).populate({ path: "academicDepartment", populate: { path: "academicFaculty" } })
