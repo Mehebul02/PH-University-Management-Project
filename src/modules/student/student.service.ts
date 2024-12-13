@@ -29,20 +29,41 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     })
 
     // filtering 
-    const excludeField = ["searchTerm", "sort"]
-    excludeField.forEach((field) => delete queryObj[field])
+    const excludeField = ["searchTerm", "sort", "limit", 'page']
+    console.log({ query }, { queryObj });
+    excludeField.forEach((el) => delete queryObj[el])
     // console.log(query,queryObj)
 
     const filterQuery = searchQuery.find(queryObj).
         populate("admissionSemester").populate({ path: "academicDepartment", populate: { path: "academicFaculty" } })
 
+    // sorting 
     let sort = '-createdAt'
     if (query.sort) {
         sort = query.sort as string
     }
 
-    const sortQuery = await filterQuery.sort(sort)
-    return sortQuery
+    const sortQuery = filterQuery.sort(sort)
+
+
+    // pagination 
+    let page = 1
+    let limit = 1
+    let skip = 0
+
+    if (query.limit) {
+        limit = Number(query.limit);
+    }
+
+    if (query.page) {
+        page = Number(query.page)
+        skip = (page - 1) * limit
+    }
+    const paginationQuery = searchQuery.skip(skip)
+
+    const limitQuery = await paginationQuery.limit(limit)
+
+    return limitQuery
 }
 const getSingleStudentFromDB = async (id: string) => {
     const result = await Student.findOne({ id }).populate({ path: "academicDepartment", populate: { path: "academicFaculty" } })
@@ -97,7 +118,7 @@ const deleteStudentFromDB = async (id: string) => {
     } catch (error) {
         await session.abortTransaction()
         await session.endSession()
-        throw new AppError(httpStatus.httpStatus, "Field to delete student")
+        throw new AppError(httpStatus.BAD_REQUEST, "Field to delete student")
 
     }
 
