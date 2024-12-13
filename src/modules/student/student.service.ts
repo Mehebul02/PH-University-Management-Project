@@ -17,7 +17,7 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     const studentSearchableField = ['email', 'name.firstName', 'presentAddress']
 
     let searchTerm = ''
-    if (query?.search) {
+    if (query?.searchTerm) {
         searchTerm = query.searchTerm as string
     }
 
@@ -29,7 +29,7 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     })
 
     // filtering 
-    const excludeField = ["searchTerm", "sort", "limit", 'page']
+    const excludeField = ["searchTerm", "sort", "limit", 'page',"fields"]
     console.log({ query }, { queryObj });
     excludeField.forEach((el) => delete queryObj[el])
     // console.log(query,queryObj)
@@ -59,11 +59,25 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
         page = Number(query.page)
         skip = (page - 1) * limit
     }
-    const paginationQuery = searchQuery.skip(skip)
+    const paginationQuery = sortQuery.skip(skip)
 
-    const limitQuery = await paginationQuery.limit(limit)
+    const limitQuery =  paginationQuery.limit(limit)
 
-    return limitQuery
+
+    // field limitation
+
+    let fields = '-__v';
+
+
+    // fields name,email 
+    // fields name email 
+    if(query.fields){
+        fields = (query.fields as string).split(',').join(' ');
+        console.log(fields);
+    }
+
+    const fieldQuery = await limitQuery.select(fields);
+    return fieldQuery
 }
 const getSingleStudentFromDB = async (id: string) => {
     const result = await Student.findOne({ id }).populate({ path: "academicDepartment", populate: { path: "academicFaculty" } })
