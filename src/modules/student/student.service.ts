@@ -5,79 +5,94 @@ import { Student } from './student.model'
 import AppError from '../../app/errors/AppError'
 import { User } from '../user/user.model';
 import { TStudent } from './student.interface';
+import QueryBuilder from '../../app/builder/QueryBuilder';
+import { studentSearchableField } from './student.constand';
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
 
     console.log('base query', query)
-    const queryObj = { ...query } //copy the query
+    // const queryObj = { ...query } //copy the query
 
 
 
 
-    const studentSearchableField = ['email', 'name.firstName', 'presentAddress']
+    // const studentSearchableField = ['email', 'name.firstName', 'presentAddress']
 
-    let searchTerm = ''
-    if (query?.searchTerm) {
-        searchTerm = query.searchTerm as string
-    }
+    // let searchTerm = ''
+    // if (query?.searchTerm) {
+    //     searchTerm = query.searchTerm as string
+    // }
 
 
-    const searchQuery = Student.find({
-        $or: studentSearchableField.map((field) => ({
-            [field]: { $regex: searchTerm, $options: 'i' }
-        }))
-    })
+    // const searchQuery = Student.find({
+    //     $or: studentSearchableField.map((field) => ({
+    //         [field]: { $regex: searchTerm, $options: 'i' }
+    //     }))
+    // })
 
     // filtering 
-    const excludeField = ["searchTerm", "sort", "limit", 'page',"fields"]
-    console.log({ query }, { queryObj });
-    excludeField.forEach((el) => delete queryObj[el])
-    // console.log(query,queryObj)
+    // const excludeField = ["searchTerm", "sort", "limit", 'page',"fields"]
+    // console.log({ query }, { queryObj });
+    // excludeField.forEach((el) => delete queryObj[el])
+    // // console.log(query,queryObj)
 
-    const filterQuery = searchQuery.find(queryObj).
-        populate("admissionSemester").populate({ path: "academicDepartment", populate: { path: "academicFaculty" } })
+    // const filterQuery = searchQuery.find(queryObj).
+    //     populate("admissionSemester").populate({ path: "academicDepartment", populate: { path: "academicFaculty" } })
 
     // sorting 
-    let sort = '-createdAt'
-    if (query.sort) {
-        sort = query.sort as string
-    }
+    // let sort = '-createdAt'
+    // if (query.sort) {
+    //     sort = query.sort as string
+    // }
 
-    const sortQuery = filterQuery.sort(sort)
-
-
-    // pagination 
-    let page = 1
-    let limit = 1
-    let skip = 0
-
-    if (query.limit) {
-        limit = Number(query.limit);
-    }
-
-    if (query.page) {
-        page = Number(query.page)
-        skip = (page - 1) * limit
-    }
-    const paginationQuery = sortQuery.skip(skip)
-
-    const limitQuery =  paginationQuery.limit(limit)
+    // const sortQuery = filterQuery.sort(sort)
 
 
-    // field limitation
+    // // pagination 
+    // let page = 1
+    // let limit = 10
+    // let skip = 0
 
-    let fields = '-__v';
+    // if (query.limit) {
+    //     limit = Number(query.limit);
+    // }
+
+    // if (query.page) {
+    //     page = Number(query.page)
+    //     skip = (page - 1) * limit
+    // }
+    // const paginationQuery = sortQuery.skip(skip)
+
+    // const limitQuery =  paginationQuery.limit(limit)
 
 
-    // fields name,email 
-    // fields name email 
-    if(query.fields){
-        fields = (query.fields as string).split(',').join(' ');
-        console.log(fields);
-    }
+    // // field limitation
 
-    const fieldQuery = await limitQuery.select(fields);
-    return fieldQuery
+    // let fields = '-__v';
+
+
+    // // fields name,email 
+    // // fields name email 
+    // if(query.fields){
+    //     fields = (query.fields as string).split(',').join(' ');
+    //     console.log(fields);
+    // }
+
+    // const fieldQuery = await limitQuery.select(fields);
+    // return fieldQuery
+
+   
+     
+
+    const studentQuery = new QueryBuilder(Student.find().populate("admissionSemester").populate({ path: "academicDepartment", populate: { path: "academicFaculty" } }), query)
+        .search(studentSearchableField)
+        .filter()
+        .sort()
+        .paginate()
+        .fields()
+
+    const result = await studentQuery.modelQuery
+    return result
 }
 const getSingleStudentFromDB = async (id: string) => {
     const result = await Student.findOne({ id }).populate({ path: "academicDepartment", populate: { path: "academicFaculty" } })
