@@ -16,7 +16,7 @@ export type TBloodGroup=
 
 
 export type TUserName = {
-    name: string,
+    firstName: string,
     middleName: string,
     lastName: string
 }
