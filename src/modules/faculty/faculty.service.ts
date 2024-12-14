@@ -15,3 +15,8 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
     return result
 
 }
+
+
+export const FacultyServices = {
+    getAllFacultiesFromDB
+}
