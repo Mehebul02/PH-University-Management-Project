@@ -1,6 +1,7 @@
+import { TAdmin } from './../admin/admin.interface';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import httpStatus  from 'http-status';
+import httpStatus from 'http-status';
 
 import config from '../../config';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
@@ -21,7 +22,7 @@ import { Faculty } from '../faculty/faculty.model';
 
 
 // const createStudentIntoDB = async (password: string, payload: TStudent) => {
-  
+
 //   // create a user object
 //   const userData: Partial<TUser> = {};
 
@@ -50,7 +51,7 @@ import { Faculty } from '../faculty/faculty.model';
 //     if (!newUser.length) {
 //       throw new AppError(httpStatus.BAD_REQUEST,'Field create a user')
 
-      
+
 //     }
 //     // set id , _id as user
 //     payload.id = newUser[0].id;
@@ -184,6 +185,21 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     throw new Error(error);
   }
 };
+
+
+const createAdminIntoDB = async (password: string, payload: TAdmin) => {
+  const userData: Partial<TUser> = {}
+
+  //if password is not given , use default password
+
+  userData.password = password || (config.default_password as string)
+  // set user role 
+
+  userData.role='admin'
+
+
+}
+
 // const createStudentIntoDB = async (password: string, payload: TStudent) => {
 //   // Create a user object
 //   const userData: Partial<TUser> = {};
