@@ -6,7 +6,7 @@ import { FacultyServices } from "./faculty.service";
 
 
 
-const getSingleFaculty = catchAsync(async(req, res) => {
+const getSingleFaculty = catchAsync(async (req, res) => {
     const { id } = req.params
     const result = await FacultyServices.getSingleFacultyFromDB(id)
 
@@ -31,9 +31,37 @@ const getAllFaculties = catchAsync(async (req, res) => {
 })
 
 
+const updateFaculty = catchAsync(async (req, res) => {
+    const { id } = req.params
+    const { faculty } = req.body
+    const result = await FacultyServices.updatedFacultyIntoDB(id, faculty)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Faculties are updated successfully",
+        data: result
+    })
+})
+
+
+const deleteFaculty = catchAsync(async(req,res)=>{
+    const {id} = req.params
+    const result = await FacultyServices.deleteFacultyFromDB(id)
+
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success: true,
+        message: "Faculties are deleted successfully",
+        data: result
+    })
+
+})
+
 
 
 export const FacultiesControllers = {
     getAllFaculties,
-    getSingleFaculty
+    getSingleFaculty,
+    updateFaculty,
+    deleteFaculty
 }
