@@ -23,14 +23,21 @@ const getAllCourseFromDB = async (query: Record<string, unknown>) => {
 }
 
 const getSingleCourseFromDB = async (id: string) => {
-    const result = await Course.findById(id)
+    const result = await Course.findById(id).populate('preRequisiteCourse.course')
     return result
 }
 
-const deleteCourseIntoDB = async (id: string) => {
-    const result = await Course.findByIdAndUpdate(id, { isDeleted: true }, { new: true })
-    return result
-}
+const deleteCourseFromDB = async (id: string) => {
+    const result = await Course.findByIdAndUpdate(
+      id,
+      { isDeleted: true },
+      {
+        new: true,
+      },
+    );
+    return result;
+  };
+  
 
 
 
@@ -40,6 +47,6 @@ export const CourseServices = {
     createCourseIntoDB,
     getAllCourseFromDB,
     getSingleCourseFromDB,
-    deleteCourseIntoDB
+    deleteCourseFromDB
 
 }

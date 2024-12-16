@@ -8,6 +8,7 @@ const router = express.Router()
 
 router.post('/create-course', validateRequest(CourseValidation.createCourseValidationSchema), CourseController.createCourse)
 router.get('/:id', CourseController.getSingleCourse)
+router.patch('/:id', validateRequest(CourseValidation.updateCourseValidationSchema), CourseController.updateCourse)
 router.delete('/:id', CourseController.deleteCourse)
 router.get('/', CourseController.getAllCourse)
 
