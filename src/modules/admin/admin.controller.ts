@@ -27,6 +27,19 @@ const getSingleAdmin = catchAsync(async (req, res) => {
         data: result,
     })
 })
+const updateAdminIntoDB = catchAsync(async (req, res) => {
+
+    const { id } = req.params
+    const {admin} = req.body
+    const result = await AdminServices.updateAdminIntoDB(id,admin)
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Admins are updated successfully',
+        data: result,
+    })
+})
 
 
 
@@ -34,5 +47,6 @@ const getSingleAdmin = catchAsync(async (req, res) => {
 
 export const AdminControllers = {
     getAllAdmin,
-    getSingleAdmin
+    getSingleAdmin,
+    updateAdminIntoDB
 }
