@@ -55,21 +55,21 @@ const userSchema = new Schema<TUser>(
   });
 
 
-userSchema.pre('save', async function (next) {
-    const user = this;
-    user.password = await bcrypt.hash(
-        user.password,
-        Number(config.bcrypt_salt_rounds)
-    )
-    next()
-})
+// userSchema.pre('save', async function (next) {
+//     const user = this;
+//     user.password = await bcrypt.hash(
+//         user.password,
+//         Number(config.bcrypt_salt_rounds)
+//     )
+//     next()
+// })
 
-// set "" after saving password
+// // set "" after saving password
 
-userSchema.post('save', function (doc, next) {
-    doc.password = "";
-    next()
+// userSchema.post('save', function (doc, next) {
+//     doc.password = "";
+//     next()
 
-})
+// })
 
 export const User = model<TUser>('User', userSchema)
