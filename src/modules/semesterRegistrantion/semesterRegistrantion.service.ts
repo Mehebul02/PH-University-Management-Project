@@ -7,7 +7,7 @@ import { SemesterRegistration } from "./semesterRegistrantion.model";
 
 const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) => {
 
-    const academicSemester = payload.academicSemester
+    const academicSemester = payload?.academicSemester;
 
     // check if the semester is exit 
     const isAcademicSemesterExists = await AcademicSemester.findById(academicSemester)
@@ -18,9 +18,9 @@ const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) 
 
     // check if the semester is already registered!
 
-    const isSemesterRegistrationExists = await SemesterRegistration.findOne(academicSemester)
+    const isSemesterRegistrationExists = await SemesterRegistration.findOne({academicSemester})
 
-    if (!isSemesterRegistrationExists) {
+    if (isSemesterRegistrationExists) {
         throw new AppError(httpStatus.CONFLICT, 'This semester is already registered!')
     }
     const result = await SemesterRegistration.create(payload)
