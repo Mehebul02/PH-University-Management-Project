@@ -17,7 +17,7 @@ const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) 
     })
 
     if (isThereUpcomingOrOngoingSemester) {
-        throw new AppError(httpStatus.BAD_REQUEST, `There is already a ${isThereUpcomingOrOngoingSemester.status}`)
+        throw new AppError(httpStatus.BAD_REQUEST, `There is already a an ${isThereUpcomingOrOngoingSemester.status} register semester!`)
     }
 
 
@@ -59,8 +59,23 @@ const getSingleSemesterRegistrationFromDB = async (id: string) => {
     const result = await SemesterRegistration.findById(id).populate('academicSemester')
     return result
 }
-const updateSemesterRegistrationIntoDB = async (id: string) => {
-    const result = await SemesterRegistration.findById(id)
+const updateSemesterRegistrationIntoDB = async (id: string, payload: Partial<TSemesterRegistration>) => {
+
+    // if the requested semester registration , We will not update anything
+
+    // check if the semester is already registered!
+
+    const isSemesterRegistrationExists = await SemesterRegistration.findById(id)
+
+    if (!isSemesterRegistrationExists) {
+        throw new AppError(httpStatus.NOT_FOUND, 'This semester is not found !')
+    }
+
+
+    const currentSemesterStatus = isSemesterRegistrationExists?.status
+    if (currentSemesterStatus === 'ENDED') {
+        throw new AppError(httpStatus.BAD_REQUEST, `This semester is already ${currentSemesterStatus}`)
+    }
     return result
 }
 

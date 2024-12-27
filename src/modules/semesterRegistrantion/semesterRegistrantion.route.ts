@@ -12,7 +12,7 @@ router.post(
      validateRequest(SemesterRegistrationValidations.createSemesterRegistrationValidationSchema),
      SemesterRegistrationControllers.createSemesterRegistration)
 router.get('/:id', SemesterRegistrationControllers.getSingleSemesterRegistration)
-router.patch('/:id', SemesterRegistrationControllers.updateSemesterRegistration)
+router.patch('/:id',validateRequest(SemesterRegistrationValidations.updateSemesterRegistrationValidationSchema), SemesterRegistrationControllers.updateSemesterRegistration)
 router.get('/', SemesterRegistrationControllers.getAllSemesterRegistration)
 
 
