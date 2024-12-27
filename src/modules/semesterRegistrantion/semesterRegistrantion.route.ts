@@ -8,11 +8,12 @@ import { SemesterRegistrationControllers } from "./semesterRegistrantion.control
 const router = Router()
 
 router.post(
-    '/create-semester-registration', 
-    validateRequest(SemesterRegistrationValidations.createSemesterRegistrationValidationSchema),
+     '/create-semester-registration',
+     validateRequest(SemesterRegistrationValidations.createSemesterRegistrationValidationSchema),
      SemesterRegistrationControllers.createSemesterRegistration)
 router.get('/:id', SemesterRegistrationControllers.getSingleSemesterRegistration)
+router.patch('/:id', SemesterRegistrationControllers.updateSemesterRegistration)
 router.get('/', SemesterRegistrationControllers.getAllSemesterRegistration)
 
 
-     export const SemesterRegistrationRoutes = router
+export const SemesterRegistrationRoutes = router
