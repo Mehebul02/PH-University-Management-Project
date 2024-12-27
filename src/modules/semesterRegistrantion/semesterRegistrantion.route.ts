@@ -11,7 +11,7 @@ router.post(
     '/create-semester-registration', 
     validateRequest(SemesterRegistrationValidations.createSemesterRegistrationValidationSchema),
      SemesterRegistrationControllers.createSemesterRegistration)
-
+router.get('/', SemesterRegistrationControllers.getAllSemesterRegistration)
 
 
      export const SemesterRegistrationRoutes = router
