@@ -11,6 +11,7 @@ router.post(
     '/create-semester-registration', 
     validateRequest(SemesterRegistrationValidations.createSemesterRegistrationValidationSchema),
      SemesterRegistrationControllers.createSemesterRegistration)
+router.get('/:id', SemesterRegistrationControllers.getSingleSemesterRegistration)
 router.get('/', SemesterRegistrationControllers.getAllSemesterRegistration)
 
 
