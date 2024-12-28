@@ -4,6 +4,7 @@ import { AcademicSemester } from "../academicSemester/academicSemester.model";
 import { TSemesterRegistration } from "./semesterRegistrantion.interface";
 import { SemesterRegistration } from "./semesterRegistrantion.model";
 import QueryBuilder from "../../app/builder/QueryBuilder";
+import { RegistrationStatus } from "./semesterRegistrantion.constrant";
 
 
 const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) => {
@@ -13,7 +14,7 @@ const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) 
     // check if there anẏ register semester that is already 'UPCOMING' | 'ONGOING'
 
     const isThereUpcomingOrOngoingSemester = await SemesterRegistration.findOne({
-        $or: [{ status: 'UPCOMING' }, { status: 'ONGOING' }]
+        $or: [{ status: RegistrationStatus.UPCOMING }, { status: RegistrationStatus.ONGOING }]
     })
 
     if (isThereUpcomingOrOngoingSemester) {
@@ -75,29 +76,29 @@ const updateSemesterRegistrationIntoDB = async (id: string, payload: Partial<TSe
     const currentSemesterStatus = isSemesterRegistrationExists?.status
     const requestedStatus = payload?.status
 
-    if (currentSemesterStatus === 'ENDED') {
+    if (currentSemesterStatus === RegistrationStatus.ENDED) {
         throw new AppError(httpStatus.BAD_REQUEST, `This semester is already ${currentSemesterStatus}`)
     }
     // return result
 
     // UPCOMING ---->ONGOING---->ENDED 
 
-    if (currentSemesterStatus === 'UPCOMING' && requestedStatus === 'ENDED') {
+    if (currentSemesterStatus === RegistrationStatus.UPCOMING && requestedStatus === RegistrationStatus.ENDED) {
         throw new AppError
-        (httpStatus.BAD_REQUEST, `You can not directly change status from ${currentSemesterStatus} to ${requestedStatus}`)
+            (httpStatus.BAD_REQUEST, `You can not directly change status from ${currentSemesterStatus} to ${requestedStatus}`)
 
     }
-    if (currentSemesterStatus === 'ONGOING' && requestedStatus === 'UPCOMING') {
+    if (currentSemesterStatus === RegistrationStatus.ONGOING && requestedStatus === RegistrationStatus.UPCOMING) {
         throw new AppError
-        (httpStatus.BAD_REQUEST, `You can not directly change status from ${currentSemesterStatus} to ${requestedStatus}`)
+            (httpStatus.BAD_REQUEST, `You can not directly change status from ${currentSemesterStatus} to ${requestedStatus}`)
 
     }
     const result = await SemesterRegistration.findByIdAndUpdate(id, payload, {
         new: true,
         runValidators: true,
-      });
-    
-      return result;
+    });
+
+    return result;
 }
 
 export const SemesterRegistrationServices = {
