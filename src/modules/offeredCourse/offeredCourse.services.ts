@@ -11,7 +11,7 @@ import { Faculty } from "../faculty/faculty.model";
 
 const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
 
-    const { semesterRegistration, academicFaculty, academicDepartment, course, faculty } = payload
+    const { semesterRegistration, academicFaculty, academicDepartment, section, course, faculty } = payload
 
     const isSemesterRegistrationExits = await SemesterRegistration.findById(semesterRegistration)
 
@@ -19,6 +19,9 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     if (!isSemesterRegistrationExits) {
         throw new AppError(httpStatus.NOT_FOUND, 'Semester registration not found')
     }
+
+    const academicSemester = isSemesterRegistrationExits.academicSemester
+
     const isAcademicFacultyExits = await AcademicFaculty.findById(academicFaculty)
 
 
@@ -44,7 +47,28 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
     }
 
 
-    const result = await OfferedCourse.create(payload)
+    const isAcademicBelongFaculty = await AcademicDepartment.findOne({
+        _id:academicDepartment,
+        academicFaculty
+    })
+
+    if (!isAcademicBelongFaculty) {
+        throw new AppError(httpStatus.BAD_REQUEST, `This ${isAcademicDepartmentExits.name} is not belong to this ${isAcademicFacultyExits.name}`)
+
+    }
+
+
+    const isSameOfferedCourseExitsWithSameRegisteredSemesterWithSameSection = await OfferedCourse.findOne({
+        semesterRegistration,
+        course,
+        section
+    })
+
+    if(isSameOfferedCourseExitsWithSameRegisteredSemesterWithSameSection){
+        throw new AppError(httpStatus.BAD_REQUEST, `Offered course with same section is already exits!`)
+    }
+
+    const result = await OfferedCourse.create({ ...payload, academicSemester })
 
 
 
