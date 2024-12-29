@@ -11,7 +11,17 @@ import { Faculty } from "../faculty/faculty.model";
 
 const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
 
-    const { semesterRegistration, academicFaculty, academicDepartment, section, course, faculty } = payload
+    const { semesterRegistration,
+        academicFaculty,
+        academicDepartment,
+        section,
+        course,
+        faculty,
+        days,
+        startTime,
+        endTime
+    } = payload
+
 
     const isSemesterRegistrationExits = await SemesterRegistration.findById(semesterRegistration)
 
@@ -48,7 +58,7 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
 
 
     const isAcademicBelongFaculty = await AcademicDepartment.findOne({
-        _id:academicDepartment,
+        _id: academicDepartment,
         academicFaculty
     })
 
@@ -64,16 +74,43 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
         section
     })
 
-    if(isSameOfferedCourseExitsWithSameRegisteredSemesterWithSameSection){
+    if (isSameOfferedCourseExitsWithSameRegisteredSemesterWithSameSection) {
         throw new AppError(httpStatus.BAD_REQUEST, `Offered course with same section is already exits!`)
     }
 
-    const result = await OfferedCourse.create({ ...payload, academicSemester })
+
+    // get the schedules of the faculty 
+
+    const assignedSchedules = await OfferedCourse.find({
+        semesterRegistration,
+        faculty,
+        days: { $in: days }
+    }).select('days startTime endTime')
+
+
+    const newSchedule = {
+        days,
+        startTime,
+        endTime
+    }
+
+    assignedSchedules.forEach((schedule) => {
+
+        const existingStartTime = new Date(`1970-01-01T${schedule.startTime}`)
+        const existingEndTime = new Date(`1970-01-01T${schedule.endTime}`)
+        const newStartTime = new Date(`1970-01-01T${schedule.startTime}`)
+        const newEndTime = new Date(`1970-01-01T${schedule.endTime}`)
+    })
+
+    console.log(assignedSchedules);
 
 
 
+    // const result = await OfferedCourse.create({ ...payload, academicSemester })
 
-    return result
+    // return result
+
+    return null
 }
 
 export const OfferedCourseServices = {
